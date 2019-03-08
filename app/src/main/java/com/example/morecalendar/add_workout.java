@@ -1,5 +1,6 @@
 package com.example.morecalendar;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class add_workout extends AppCompatActivity {
-    Databasehelper mdDatabaseHelper;
+    Databasehelper mDatabaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,10 +25,14 @@ public class add_workout extends AppCompatActivity {
         repView.setText("0");
         Button saveBtn = (Button) findViewById(R.id.saveBtn);
         final TextView workoutName = (TextView) findViewById(R.id.workoutName);
+        mDatabaseHelper = new Databasehelper(this);
+        final String theDate = getIntent().getStringExtra("THE_DATE");
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddData(workoutName.getText().toString());
+                AddData(workoutName.getText().toString(), Double.parseDouble(weightView.getText().toString()),Double.parseDouble(repView.getText().toString()), theDate );
+                Intent savePage = new Intent(add_workout.this, specific_date.class);
+                startActivity(savePage);
             }
         });
         increaseBtn.setOnClickListener(new View.OnClickListener() {
@@ -64,8 +69,8 @@ public class add_workout extends AppCompatActivity {
             }
         });
     }
-    public void AddData(String newEntry){
-        boolean insertData = mdDatabaseHelper.addData(newEntry);
+    public void AddData(String newEntry, Double weight, Double reps, String date){
+        boolean insertData = mDatabaseHelper.addData(newEntry, weight, reps, date);
         System.out.print(insertData);
     }
 }

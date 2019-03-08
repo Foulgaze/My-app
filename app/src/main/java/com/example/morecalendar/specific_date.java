@@ -1,16 +1,24 @@
 package com.example.morecalendar;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class specific_date extends AppCompatActivity {
 
@@ -19,16 +27,33 @@ public class specific_date extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_date);
 
-        String theDate = getIntent().getStringExtra("THE_DATE");
+        final String theDate = getIntent().getStringExtra("THE_DATE");
         TextView chosenDate = (TextView) findViewById(R.id.chosenDate);
         chosenDate.setText(theDate);
-        File file = new File(Environment.getExternalStorageDirectory(), "hello");
+        Databasehelper myDB = new Databasehelper(this);
+        ListView listView = (ListView) findViewById(R.id.listView);
+        Cursor data = myDB.getListContents();
+        ArrayList<String> nameList = new ArrayList<String>();
+
+        if(data.getCount() == 0){
+            Toast.makeText(specific_date.this, "The database was empty", Toast.LENGTH_LONG).show();
+        } else{
+            while(data.moveToNext()){
+                String date = data.getString(4);
+                if(date.equals(theDate)){
+                    nameList.add(data.getString(1));
+                }
+            }
+            ListAdapter listAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, nameList);
+            listView.setAdapter(listAdapter);
+        }
 
         Button addExercise = (Button) findViewById(R.id.addExercize);
         addExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent workoutPage = new Intent(specific_date.this, add_workout.class);
+                workoutPage.putExtra("THE_DATE", theDate);
                 startActivity(workoutPage);
             }
         });
