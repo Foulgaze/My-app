@@ -6,9 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class add_workout extends AppCompatActivity {
-
+    Databasehelper mdDatabaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,10 +23,11 @@ public class add_workout extends AppCompatActivity {
         final EditText repView = (EditText) findViewById(R.id.repView);
         repView.setText("0");
         Button saveBtn = (Button) findViewById(R.id.saveBtn);
+        final TextView workoutName = (TextView) findViewById(R.id.workoutName);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                AddData(workoutName.getText().toString());
             }
         });
         increaseBtn.setOnClickListener(new View.OnClickListener() {
@@ -61,5 +63,9 @@ public class add_workout extends AppCompatActivity {
 
             }
         });
+    }
+    public void AddData(String newEntry){
+        boolean insertData = mdDatabaseHelper.addData(newEntry);
+        System.out.print(insertData);
     }
 }

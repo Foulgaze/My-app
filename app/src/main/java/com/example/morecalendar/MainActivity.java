@@ -10,7 +10,7 @@ import android.widget.TextView;
 import static java.util.logging.Logger.global;
 
 public class MainActivity extends AppCompatActivity {
-
+    Databasehelper mDatabaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
         final TextView date = (TextView) findViewById(R.id.date);
         final int count = 0;
+        mDatabaseHelper = new Databasehelper(this);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
@@ -27,10 +28,8 @@ public class MainActivity extends AppCompatActivity {
                 chosenDay.putExtra("THE_DATE", theDate);
                 startActivity(chosenDay);
                 System.out.println(count);
-
-
-
             }
         });
     }
+
 }
