@@ -30,8 +30,15 @@ public class add_workout extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddData(workoutName.getText().toString(), Double.parseDouble(weightView.getText().toString()),Double.parseDouble(repView.getText().toString()), theDate );
+                String actualName;
+                if(workoutName.getText().toString().equals("")){
+                    actualName = "Workout";
+                }else{
+                    actualName = workoutName.getText().toString();
+                }
+                AddData(actualName, Double.parseDouble(weightView.getText().toString()),Double.parseDouble(repView.getText().toString()), theDate );
                 Intent savePage = new Intent(add_workout.this, specific_date.class);
+                savePage.putExtra("THE_DATE", theDate);
                 startActivity(savePage);
             }
         });

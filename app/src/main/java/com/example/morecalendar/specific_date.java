@@ -33,16 +33,19 @@ public class specific_date extends AppCompatActivity {
         Databasehelper myDB = new Databasehelper(this);
         ListView listView = (ListView) findViewById(R.id.listView);
         Cursor data = myDB.getListContents();
+        Button backBtn = (Button) findViewById(R.id.backBtn);
         ArrayList<String> nameList = new ArrayList<String>();
-
+        System.out.println(data.getCount());
         if(data.getCount() == 0){
             Toast.makeText(specific_date.this, "The database was empty", Toast.LENGTH_LONG).show();
         } else{
-            while(data.moveToNext()){
+            data.moveToFirst();
+            while(!data.isAfterLast()){
                 String date = data.getString(4);
                 if(date.equals(theDate)){
-                    nameList.add(data.getString(1));
+                    nameList.add(data.getString(1) + "\t\tWeight: " + data.getDouble(2) + "\t\tReps: " + data.getDouble(3));
                 }
+                data.moveToNext();
             }
             ListAdapter listAdapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1, nameList);
             listView.setAdapter(listAdapter);
@@ -55,6 +58,19 @@ public class specific_date extends AppCompatActivity {
                 Intent workoutPage = new Intent(specific_date.this, add_workout.class);
                 workoutPage.putExtra("THE_DATE", theDate);
                 startActivity(workoutPage);
+            }
+        });
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goBack = new Intent(specific_date.this, MainActivity.class);
+                startActivity(goBack);
+            }
+        });
+        listView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent changeData = new Intent(specific_date.this, editWorkout.class);
             }
         });
     }
