@@ -10,44 +10,59 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class add_workout extends AppCompatActivity {
-    Databasehelper mDatabaseHelper;
+import com.example.morecalendar.Databasehelper;
+import com.example.morecalendar.MainActivity;
+import com.example.morecalendar.R;
+import com.example.morecalendar.specific_date;
+
+public class editWorkout extends AppCompatActivity {
+    private static final String TAG = "editWorkout";
+    private int selectedID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_workout);
+        setContentView(R.layout.activity_edit_workout);
         ImageButton increaseBtn = (ImageButton) findViewById(R.id.increaseBtn);
         ImageButton increaseBtn2 = (ImageButton) findViewById(R.id.increaseBtn2);
         ImageButton decreaseBtn = (ImageButton) findViewById(R.id.decreaseBtn);
         ImageButton decreaseBtn2 = (ImageButton) findViewById(R.id.decreaseBtn2);
-        final EditText weightView = (EditText) findViewById(R.id.weightView);
-        weightView.setText("0");
-        final EditText repView = (EditText) findViewById(R.id.repView);
-        repView.setText("0");
         Button saveBtn = (Button) findViewById(R.id.saveBtn);
-        final TextView workoutName = (TextView) findViewById(R.id.workoutName);
-        mDatabaseHelper = new Databasehelper(this);
-        final String theDate = getIntent().getStringExtra("THE_DATE");
+        Button deleteBtn = (Button) findViewById(R.id.deleteBtn);
+        final EditText weightView = findViewById(R.id.weightView);
+        final EditText repView = findViewById(R.id.repView);
+        final EditText changedWorkout = (EditText) findViewById(R.id.changedWorkout);
+        final Databasehelper myDB = new Databasehelper(this);
+        final String selectedName = getIntent().getStringExtra("name");
+        final String weight = getIntent().getStringExtra("weight");
+        final String reps = getIntent().getStringExtra("reps");
+        selectedID = getIntent().getIntExtra("id", -1); // -1 is default
+        weightView.setText(weight);
+        repView.setText(reps);
+        changedWorkout.setText(selectedName, TextView.BufferType.EDITABLE);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(String.valueOf(weightView.getText()).equals("")){
-                    toastMessage("Don't forget to put a weight amount");
+                String item = changedWorkout.getText().toString();
+                if(!item.equals("")){
+                    toastMessage(weight);
+                   myDB.updateWorkout(item, selectedID, selectedName, weight, reps);
+                    Intent goBack = new Intent(editWorkout.this, MainActivity.class);
+                    startActivity(goBack);
+//                    Intent goback = getIntent();
+//                    finish();
+//                    startActivity(goback);
+                }else{
+                    toastMessage("You must enter a name");
                 }
-                else if(String.valueOf(repView.getText()).equals("")){
-                    toastMessage("Don't forget to put a rep count");
-                } else{
-                    String actualName;
-                    if(workoutName.getText().toString().equals("")){
-                        actualName = "Workout";
-                    }else{
-                        actualName = workoutName.getText().toString();
-                    }
-                    AddData(actualName, Double.parseDouble(weightView.getText().toString()),Double.parseDouble(repView.getText().toString()), theDate );
-                    Intent savePage = new Intent(add_workout.this, specific_date.class);
-                    savePage.putExtra("THE_DATE", theDate);
-                    startActivity(savePage);
-                }
+            }
+        });
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myDB.deleteWorkout(selectedID, selectedName);
+                toastMessage("Removed from database");
+                Intent goBack = new Intent(editWorkout.this, MainActivity.class);
+                startActivity(goBack);
             }
         });
         increaseBtn.setOnClickListener(new View.OnClickListener() {
@@ -84,11 +99,11 @@ public class add_workout extends AppCompatActivity {
             }
         });
     }
-    public void AddData(String newEntry, Double weight, Double reps, String date){
-        boolean insertData = mDatabaseHelper.addData(newEntry, weight, reps, date);
-        System.out.print(insertData);
-    }
+
+
+
     public void toastMessage(String message){
-        Toast.makeText(add_workout.this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(editWorkout.this, message, Toast.LENGTH_LONG).show();
     }
+
 }

@@ -5,8 +5,10 @@ import android.database.Cursor;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -21,29 +23,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class specific_date extends AppCompatActivity {
+    private static final String TAG = "Specific_Date";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_date);
-
         final String theDate = getIntent().getStringExtra("THE_DATE");
         TextView chosenDate = (TextView) findViewById(R.id.chosenDate);
         chosenDate.setText(theDate);
-        Databasehelper myDB = new Databasehelper(this);
+        final Databasehelper myDB = new Databasehelper(this);
         ListView listView = (ListView) findViewById(R.id.listView);
         Cursor data = myDB.getListContents();
         Button backBtn = (Button) findViewById(R.id.backBtn);
-        ArrayList<String> nameList = new ArrayList<String>();
+        final ArrayList<String> nameList = new ArrayList<String>();
+        final ArrayList<String> weightList = new ArrayList<>();
+        final ArrayList<String> repList = new ArrayList<>();
+        final ArrayList<String> referenceList = new ArrayList<>();
+        final ArrayList<String> idList = new ArrayList<>();
         System.out.println(data.getCount());
         if(data.getCount() == 0){
-            Toast.makeText(specific_date.this, "The database was empty", Toast.LENGTH_LONG).show();
+            toastMessage("The database was empty");
         } else{
             data.moveToFirst();
             while(!data.isAfterLast()){
                 String date = data.getString(4);
                 if(date.equals(theDate)){
                     nameList.add(data.getString(1) + "\t\tWeight: " + data.getDouble(2) + "\t\tReps: " + data.getDouble(3));
+                    referenceList.add(data.getString(1));
+                    weightList.add(data.getString(2));
+                    repList.add(data.getString(3));
+                    idList.add(data.getString(0));
                 }
                 data.moveToNext();
             }
@@ -67,11 +78,39 @@ public class specific_date extends AppCompatActivity {
                 startActivity(goBack);
             }
         });
-        listView.setOnClickListener(new View.OnClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent changeData = new Intent(specific_date.this, editWorkout.class);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                String name = parent.getItemAtPosition(position).toString();
+//                name = name.substring(0, name.indexOf('\t'));
+                String name = referenceList.get(position);
+                Log.d(TAG, "onItemClick: The ID is: " + name);
+                Cursor data = myDB.getItemID(name);
+
+//                int itemID = -1;
+                int itemID = Integer.parseInt(idList.get(position));
+//                while(data.moveToNext()){
+//                    itemID = data.getInt(0);
+//                }
+                if(itemID > -1){
+                    Log.d(TAG, "onItemClick: The ID is: " + itemID);
+                    Intent editScreenIntent = new Intent(specific_date.this, editWorkout.class);
+                    editScreenIntent.putExtra("id", itemID);
+                    editScreenIntent.putExtra("name", name);
+                    editScreenIntent.putExtra("weight", weightList.get(position));
+                    editScreenIntent.putExtra("reps", repList.get(position));
+                    startActivity(editScreenIntent);
+                }
+                else{
+                    toastMessage("No ID associated with that name: " + name);
+                }
+
             }
         });
+
+        }
+        public void toastMessage(String message){
+            Toast.makeText(specific_date.this, message, Toast.LENGTH_LONG).show();
+        }
     }
-}
+
