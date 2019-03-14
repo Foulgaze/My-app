@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView date = (TextView) findViewById(R.id.date);
         final int count = 0;
         mDatabaseHelper = new Databasehelper(this);
+//        mDatabaseHelper.delete("people_table");
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {

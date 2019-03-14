@@ -33,19 +33,17 @@ public class editWorkout extends AppCompatActivity {
         final EditText changedWorkout = (EditText) findViewById(R.id.changedWorkout);
         final Databasehelper myDB = new Databasehelper(this);
         final String selectedName = getIntent().getStringExtra("name");
-        final String weight = getIntent().getStringExtra("weight");
-        final String reps = getIntent().getStringExtra("reps");
         selectedID = getIntent().getIntExtra("id", -1); // -1 is default
-        weightView.setText(weight);
-        repView.setText(reps);
+        weightView.setText(getIntent().getStringExtra("weight"));
+        repView.setText(getIntent().getStringExtra("reps"));
         changedWorkout.setText(selectedName, TextView.BufferType.EDITABLE);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String item = changedWorkout.getText().toString();
+
                 if(!item.equals("")){
-                    toastMessage(weight);
-                   myDB.updateWorkout(item, selectedID, selectedName, weight, reps);
+                   myDB.updateWorkout(item, selectedID, selectedName, weightView.getText().toString(), repView.getText().toString());
                     Intent goBack = new Intent(editWorkout.this, MainActivity.class);
                     startActivity(goBack);
 //                    Intent goback = getIntent();
