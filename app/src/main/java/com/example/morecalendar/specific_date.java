@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,11 +33,12 @@ public class specific_date extends AppCompatActivity {
         setContentView(R.layout.activity_specific_date);
         final String theDate = getIntent().getStringExtra("THE_DATE");
         TextView chosenDate = (TextView) findViewById(R.id.chosenDate);
+        Button copyBtn = findViewById(R.id.copyBtn);
         chosenDate.setText(theDate);
         final Databasehelper myDB = new Databasehelper(this);
         ListView listView = (ListView) findViewById(R.id.listView);
-        Cursor data = myDB.getListContents();
-        Button backBtn = (Button) findViewById(R.id.backBtn);
+        final Cursor data = myDB.getListContents();
+        ImageButton backBtn = (ImageButton) findViewById(R.id.backBtn);
         final ArrayList<String> nameList = new ArrayList<String>();
         final ArrayList<String> weightList = new ArrayList<>();
         final ArrayList<String> repList = new ArrayList<>();
@@ -74,8 +76,22 @@ public class specific_date extends AppCompatActivity {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent goBack = new Intent(specific_date.this, MainActivity.class);
-                startActivity(goBack);
+                Intent calendar = new Intent(specific_date.this, MainActivity.class);
+                startActivity(calendar);
+            }
+        });
+        copyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(data.getCount() > 0){
+                    Intent goBack = new Intent(specific_date.this, add_workout.class);
+                    goBack.putExtra("THE_DATE", theDate);
+                    goBack.putExtra("COPY", "1");
+                    startActivity(goBack);
+                } else{
+                    toastMessage("No Previous Workouts");
+                }
+
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

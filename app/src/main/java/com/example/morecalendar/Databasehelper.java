@@ -48,8 +48,7 @@ public class Databasehelper extends SQLiteOpenHelper {
     }
     public Cursor getListContents(){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor data = db.rawQuery("SELECT * FROM " + TABLE_NAME,null);
-        return data;
+        return db.rawQuery("SELECT * FROM " + TABLE_NAME,null);
     }
     public void delete(String s){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -76,5 +75,9 @@ public class Databasehelper extends SQLiteOpenHelper {
         Log.d(TAG, "deleteName: query: " + query);
         Log.d(TAG, "deleteName: Deleting " + name + " from database.");
         db.execSQL(query);
+    }
+    public Cursor lastWorkout(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT DISTINCT FROM " + TABLE_NAME + " ORDER BY id DESC LIMIT 1",null);
     }
 }

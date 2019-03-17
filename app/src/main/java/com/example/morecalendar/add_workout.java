@@ -1,6 +1,7 @@
 package com.example.morecalendar;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,13 +22,22 @@ public class add_workout extends AppCompatActivity {
         ImageButton decreaseBtn = (ImageButton) findViewById(R.id.decreaseBtn);
         ImageButton decreaseBtn2 = (ImageButton) findViewById(R.id.decreaseBtn2);
         final EditText weightView = (EditText) findViewById(R.id.weightView);
-        weightView.setText("0");
         final EditText repView = (EditText) findViewById(R.id.repView);
-        repView.setText("0");
+
         Button saveBtn = (Button) findViewById(R.id.saveBtn);
         final TextView workoutName = (TextView) findViewById(R.id.workoutName);
         mDatabaseHelper = new Databasehelper(this);
         final String theDate = getIntent().getStringExtra("THE_DATE");
+        if(getIntent().hasExtra("COPY")){
+            Cursor copyWorkout = mDatabaseHelper.getListContents();
+            copyWorkout.moveToLast();
+            weightView.setText(copyWorkout.getString(2));
+            repView.setText(copyWorkout.getString(3));
+            workoutName.setText(copyWorkout.getString(1));
+        } else{
+            weightView.setText("0");
+            repView.setText("0");
+        }
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
