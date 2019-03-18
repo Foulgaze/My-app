@@ -71,13 +71,10 @@ public class add_workout extends AppCompatActivity {
                 }
                 else if(String.valueOf(repView.getText()).equals("")){
                     toastMessage("Don't forget to put a rep count");
+                } else if (workoutName.getText().toString().equals("")) {
+                    toastMessage("Don't forget to put a Workout name");
                 } else{
-                    String actualName;
-                    if(workoutName.getText().toString().equals("")){
-                        actualName = "Workout";
-                    }else{
-                        actualName = workoutName.getText().toString();
-                    }
+                    String actualName = workoutName.getText().toString();
                     AddData(actualName, Double.parseDouble(weightView.getText().toString()),Double.parseDouble(repView.getText().toString()), theDate );
                     Intent savePage = new Intent(add_workout.this, specific_date.class);
                     savePage.putExtra("THE_DATE", theDate);

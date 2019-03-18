@@ -1,9 +1,12 @@
 package com.example.morecalendar;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -14,6 +17,8 @@ import com.example.morecalendar.Databasehelper;
 import com.example.morecalendar.MainActivity;
 import com.example.morecalendar.R;
 import com.example.morecalendar.specific_date;
+
+import java.util.ArrayList;
 
 public class editWorkout extends AppCompatActivity {
     private static final String TAG = "editWorkout";
@@ -30,9 +35,28 @@ public class editWorkout extends AppCompatActivity {
         Button deleteBtn = (Button) findViewById(R.id.deleteBtn);
         final EditText weightView = findViewById(R.id.weightView);
         final EditText repView = findViewById(R.id.repView);
-        final EditText changedWorkout = (EditText) findViewById(R.id.changedWorkout);
+        final AutoCompleteTextView changedWorkout = (AutoCompleteTextView) findViewById(R.id.changedWorkout);
         final Databasehelper myDB = new Databasehelper(this);
         final String selectedName = getIntent().getStringExtra("name");
+        if(getIntent().hasExtra("NAMES")){
+            Cursor names = myDB.getListContents();
+            names.moveToFirst();
+            ArrayList<String> listName = new ArrayList<>();
+            while(!names.isAfterLast()){
+                listName.add(names.getString(1));
+                names.moveToNext();
+            }
+            ArrayList<String> noDupes = new ArrayList<>();
+            for(int i = 0; i < listName.size(); i++){
+                if(!noDupes.contains(listName.get(i))){
+                    noDupes.add(listName.get(i));
+                }
+            }
+            String[] arrName =noDupes.toArray(new String[0]);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, arrName);
+            changedWorkout.setAdapter(adapter);
+            changedWorkout.setThreshold(1);
+        }
         selectedID = getIntent().getIntExtra("id", -1); // -1 is default
         weightView.setText(getIntent().getStringExtra("weight"));
         repView.setText(getIntent().getStringExtra("reps"));
@@ -44,13 +68,14 @@ public class editWorkout extends AppCompatActivity {
 
                 if(!item.equals("")){
                    myDB.updateWorkout(item, selectedID, selectedName, weightView.getText().toString(), repView.getText().toString());
-                    Intent goBack = new Intent(editWorkout.this, MainActivity.class);
+                    Intent goBack = new Intent(editWorkout.this,specific_date.class);
+                    goBack.putExtra("THE_DATE", getIntent().getStringExtra("DATE"));
                     startActivity(goBack);
 //                    Intent goback = getIntent();
 //                    finish();
 //                    startActivity(goback);
                 }else{
-                    toastMessage("You must enter a name");
+                    toastMessage("Don't forget to put a Workout name");
                 }
             }
         });
@@ -59,7 +84,8 @@ public class editWorkout extends AppCompatActivity {
             public void onClick(View v) {
                 myDB.deleteWorkout(selectedID, selectedName);
                 toastMessage("Removed from database");
-                Intent goBack = new Intent(editWorkout.this, MainActivity.class);
+                Intent goBack = new Intent(editWorkout.this, specific_date.class);
+                goBack.putExtra("THE_DATE", getIntent().getStringExtra("DATE"));
                 startActivity(goBack);
             }
         });

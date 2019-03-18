@@ -73,7 +73,7 @@ public class specific_date extends AppCompatActivity {
                 Intent workoutPage = new Intent(specific_date.this, add_workout.class);
                 workoutPage.putExtra("THE_DATE", theDate);
                 if(passedNames.size() > 0){
-                    workoutPage.putExtra("NAMES", passedNames.toArray());
+                    workoutPage.putExtra("NAMES", "0");
                 }
                     startActivity(workoutPage);
             }
@@ -120,6 +120,10 @@ public class specific_date extends AppCompatActivity {
                     editScreenIntent.putExtra("name", name);
                     editScreenIntent.putExtra("weight", weightList.get(position));
                     editScreenIntent.putExtra("reps", repList.get(position));
+                    if(passedNames.size() > 0){
+                        editScreenIntent.putExtra("NAMES", "0");
+                    }
+                    editScreenIntent.putExtra("DATE", theDate);
                     startActivity(editScreenIntent);
                 }
                 else{
