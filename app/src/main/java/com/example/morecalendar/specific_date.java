@@ -21,6 +21,7 @@ import org.w3c.dom.Text;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class specific_date extends AppCompatActivity {
@@ -39,18 +40,19 @@ public class specific_date extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.listView);
         final Cursor data = myDB.getListContents();
         ImageButton backBtn = (ImageButton) findViewById(R.id.backBtn);
+        final ArrayList<String> passedNames = new ArrayList<>();
         final ArrayList<String> nameList = new ArrayList<String>();
         final ArrayList<String> weightList = new ArrayList<>();
         final ArrayList<String> repList = new ArrayList<>();
         final ArrayList<String> referenceList = new ArrayList<>();
         final ArrayList<String> idList = new ArrayList<>();
-        System.out.println(data.getCount());
         if(data.getCount() == 0){
             toastMessage("The database was empty");
         } else{
             data.moveToFirst();
             while(!data.isAfterLast()){
                 String date = data.getString(4);
+                passedNames.add(data.getString(1));
                 if(date.equals(theDate)){
                     nameList.add(data.getString(1) + "\t\tWeight: " + data.getDouble(2) + "\t\tReps: " + data.getDouble(3));
                     referenceList.add(data.getString(1));
@@ -70,7 +72,10 @@ public class specific_date extends AppCompatActivity {
             public void onClick(View v) {
                 Intent workoutPage = new Intent(specific_date.this, add_workout.class);
                 workoutPage.putExtra("THE_DATE", theDate);
-                startActivity(workoutPage);
+                if(passedNames.size() > 0){
+                    workoutPage.putExtra("NAMES", passedNames.toArray());
+                }
+                    startActivity(workoutPage);
             }
         });
         backBtn.setOnClickListener(new View.OnClickListener() {

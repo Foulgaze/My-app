@@ -5,11 +5,16 @@ import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class add_workout extends AppCompatActivity {
     Databasehelper mDatabaseHelper;
@@ -23,10 +28,30 @@ public class add_workout extends AppCompatActivity {
         ImageButton decreaseBtn2 = (ImageButton) findViewById(R.id.decreaseBtn2);
         final EditText weightView = (EditText) findViewById(R.id.weightView);
         final EditText repView = (EditText) findViewById(R.id.repView);
-
+        mDatabaseHelper = new Databasehelper(add_workout.this);
         Button saveBtn = (Button) findViewById(R.id.saveBtn);
-        final TextView workoutName = (TextView) findViewById(R.id.workoutName);
-        mDatabaseHelper = new Databasehelper(this);
+        final AutoCompleteTextView workoutName = (AutoCompleteTextView) findViewById(R.id.workoutName);
+        if(getIntent().hasExtra("NAMES")){
+            Cursor names = mDatabaseHelper.getListContents();
+            names.moveToFirst();
+            ArrayList<String> listName = new ArrayList<>();
+            while(!names.isAfterLast()){
+                listName.add(names.getString(1));
+                names.moveToNext();
+            }
+            ArrayList<String> noDupes = new ArrayList<>();
+            for(int i = 0; i < listName.size(); i++){
+                if(!noDupes.contains(listName.get(i))){
+                    noDupes.add(listName.get(i));
+                }
+            }
+            String[] arrName =noDupes.toArray(new String[0]);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, arrName);
+            workoutName.setAdapter(adapter);
+            workoutName.setThreshold(1);
+        }
+
+
         final String theDate = getIntent().getStringExtra("THE_DATE");
         if(getIntent().hasExtra("COPY")){
             Cursor copyWorkout = mDatabaseHelper.getListContents();
