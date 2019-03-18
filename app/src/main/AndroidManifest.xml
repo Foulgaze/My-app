@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".editWorkout"></activity>
+        <activity android:name=".previousWorkouts"></activity>
+        <activity android:name=".editWorkout" />
         <activity android:name=".add_workout" />
         <activity android:name=".specific_date" />
         <activity android:name=".MainActivity">

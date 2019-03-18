@@ -22,15 +22,15 @@ public class add_workout extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_workout);
-        ImageButton increaseBtn = (ImageButton) findViewById(R.id.increaseBtn);
-        ImageButton increaseBtn2 = (ImageButton) findViewById(R.id.increaseBtn2);
-        ImageButton decreaseBtn = (ImageButton) findViewById(R.id.decreaseBtn);
-        ImageButton decreaseBtn2 = (ImageButton) findViewById(R.id.decreaseBtn2);
-        final EditText weightView = (EditText) findViewById(R.id.weightView);
-        final EditText repView = (EditText) findViewById(R.id.repView);
+        ImageButton increaseBtn = findViewById(R.id.increaseBtn);
+        ImageButton increaseBtn2 = findViewById(R.id.increaseBtn2);
+        ImageButton decreaseBtn = findViewById(R.id.decreaseBtn);
+        ImageButton decreaseBtn2 = findViewById(R.id.decreaseBtn2);
+        final EditText weightView = findViewById(R.id.weightView);
+        final EditText repView = findViewById(R.id.repView);
         mDatabaseHelper = new Databasehelper(add_workout.this);
-        Button saveBtn = (Button) findViewById(R.id.saveBtn);
-        final AutoCompleteTextView workoutName = (AutoCompleteTextView) findViewById(R.id.workoutName);
+        Button saveBtn = findViewById(R.id.saveBtn);
+        final AutoCompleteTextView workoutName = findViewById(R.id.workoutName);
         if(getIntent().hasExtra("NAMES")){
             Cursor names = mDatabaseHelper.getListContents();
             names.moveToFirst();

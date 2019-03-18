@@ -15,8 +15,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
-        final TextView date = (TextView) findViewById(R.id.date);
+        CalendarView calendarView = findViewById(R.id.calendarView);
+        final TextView date = findViewById(R.id.date);
         final int count = 0;
         mDatabaseHelper = new Databasehelper(this);
 //        mDatabaseHelper.delete("people_table");

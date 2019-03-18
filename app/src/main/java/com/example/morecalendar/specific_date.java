@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class specific_date extends AppCompatActivity {
     private static final String TAG = "Specific_Date";
@@ -52,8 +53,8 @@ public class specific_date extends AppCompatActivity {
             data.moveToFirst();
             while(!data.isAfterLast()){
                 String date = data.getString(4);
-                passedNames.add(data.getString(1));
                 if(date.equals(theDate)){
+                    passedNames.add(data.getString(1));
                     nameList.add(data.getString(1) + "\t\tWeight: " + data.getDouble(2) + "\t\tReps: " + data.getDouble(3));
                     referenceList.add(data.getString(1));
                     weightList.add(data.getString(2));
@@ -123,7 +124,7 @@ public class specific_date extends AppCompatActivity {
                     if(passedNames.size() > 0){
                         editScreenIntent.putExtra("NAMES", "0");
                     }
-                    editScreenIntent.putExtra("DATE", theDate);
+                    editScreenIntent.putExtra("THE_DATE", theDate);
                     startActivity(editScreenIntent);
                 }
                 else{
@@ -132,7 +133,17 @@ public class specific_date extends AppCompatActivity {
 
             }
         });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent test = new Intent(specific_date.this, previousWorkouts.class);
+                test.putExtra("THE_DATE", theDate);
+                test.putExtra("WORKOUT_TITLE", passedNames.get(position));
+                startActivity(test);
 
+                return true;
+            }
+        });
         }
         public void toastMessage(String message){
             Toast.makeText(specific_date.this, message, Toast.LENGTH_LONG).show();

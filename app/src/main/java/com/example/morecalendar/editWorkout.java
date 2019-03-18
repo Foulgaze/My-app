@@ -27,15 +27,15 @@ public class editWorkout extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_workout);
-        ImageButton increaseBtn = (ImageButton) findViewById(R.id.increaseBtn);
-        ImageButton increaseBtn2 = (ImageButton) findViewById(R.id.increaseBtn2);
-        ImageButton decreaseBtn = (ImageButton) findViewById(R.id.decreaseBtn);
-        ImageButton decreaseBtn2 = (ImageButton) findViewById(R.id.decreaseBtn2);
-        Button saveBtn = (Button) findViewById(R.id.saveBtn);
-        Button deleteBtn = (Button) findViewById(R.id.deleteBtn);
+        ImageButton increaseBtn = findViewById(R.id.increaseBtn);
+        ImageButton increaseBtn2 =  findViewById(R.id.increaseBtn2);
+        ImageButton decreaseBtn =  findViewById(R.id.decreaseBtn);
+        ImageButton decreaseBtn2 =  findViewById(R.id.decreaseBtn2);
+        Button saveBtn =  findViewById(R.id.saveBtn);
+        Button deleteBtn =  findViewById(R.id.deleteBtn);
         final EditText weightView = findViewById(R.id.weightView);
         final EditText repView = findViewById(R.id.repView);
-        final AutoCompleteTextView changedWorkout = (AutoCompleteTextView) findViewById(R.id.changedWorkout);
+        final AutoCompleteTextView changedWorkout = findViewById(R.id.changedWorkout);
         final Databasehelper myDB = new Databasehelper(this);
         final String selectedName = getIntent().getStringExtra("name");
         if(getIntent().hasExtra("NAMES")){
@@ -69,7 +69,7 @@ public class editWorkout extends AppCompatActivity {
                 if(!item.equals("")){
                    myDB.updateWorkout(item, selectedID, selectedName, weightView.getText().toString(), repView.getText().toString());
                     Intent goBack = new Intent(editWorkout.this,specific_date.class);
-                    goBack.putExtra("THE_DATE", getIntent().getStringExtra("DATE"));
+                    goBack.putExtra("THE_DATE", getIntent().getStringExtra("THE_DATE"));
                     startActivity(goBack);
 //                    Intent goback = getIntent();
 //                    finish();
@@ -85,7 +85,7 @@ public class editWorkout extends AppCompatActivity {
                 myDB.deleteWorkout(selectedID, selectedName);
                 toastMessage("Removed from database");
                 Intent goBack = new Intent(editWorkout.this, specific_date.class);
-                goBack.putExtra("THE_DATE", getIntent().getStringExtra("DATE"));
+                goBack.putExtra("THE_DATE", getIntent().getStringExtra("THE_DATE"));
                 startActivity(goBack);
             }
         });
