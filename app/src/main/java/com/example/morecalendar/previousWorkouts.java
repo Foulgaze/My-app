@@ -41,7 +41,6 @@ public class previousWorkouts extends AppCompatActivity {
             if(data.getString(1).equals(theName)){
                 displayList.add(data.getString(1) + "\t\tWeight: " + data.getDouble(2) + "\t\tReps: " + data.getDouble(3) + " (" + data.getString(4) + ")");
                 dateList.add(String.valueOf(parseDate(data.getString(4))));
-                toastMessage("Hello");
             }
             data.moveToNext();
         }
@@ -84,4 +83,5 @@ public class previousWorkouts extends AppCompatActivity {
     public void toastMessage(String message){
         Toast.makeText(previousWorkouts.this, message, Toast.LENGTH_LONG).show();
     }
+
 }

@@ -47,14 +47,16 @@ public class specific_date extends AppCompatActivity {
         final ArrayList<String> repList = new ArrayList<>();
         final ArrayList<String> referenceList = new ArrayList<>();
         final ArrayList<String> idList = new ArrayList<>();
+        final ArrayList<String> selectedNames = new ArrayList<>();
         if(data.getCount() == 0){
-            toastMessage("The database was empty");
+            toastMessage("You Currently Have no Workouts");
         } else{
             data.moveToFirst();
             while(!data.isAfterLast()){
                 String date = data.getString(4);
+                passedNames.add(data.getString(1));
                 if(date.equals(theDate)){
-                    passedNames.add(data.getString(1));
+                    selectedNames.add(data.getString(1));
                     nameList.add(data.getString(1) + "\t\tWeight: " + data.getDouble(2) + "\t\tReps: " + data.getDouble(3));
                     referenceList.add(data.getString(1));
                     weightList.add(data.getString(2));
@@ -74,6 +76,7 @@ public class specific_date extends AppCompatActivity {
                 Intent workoutPage = new Intent(specific_date.this, add_workout.class);
                 workoutPage.putExtra("THE_DATE", theDate);
                 if(passedNames.size() > 0){
+
                     workoutPage.putExtra("NAMES", "0");
                 }
                     startActivity(workoutPage);
@@ -138,7 +141,7 @@ public class specific_date extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent test = new Intent(specific_date.this, previousWorkouts.class);
                 test.putExtra("THE_DATE", theDate);
-                test.putExtra("WORKOUT_TITLE", passedNames.get(position));
+                test.putExtra("WORKOUT_TITLE", selectedNames.get(position));
                 startActivity(test);
 
                 return true;
